@@ -1,9 +1,8 @@
 package org.acme.lambda;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import org.acme.lambda.model.Course;
 
 import java.util.List;
 
@@ -13,7 +12,17 @@ public class CourseResource {
     @GET()
     @Path("/courses")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<String> posts() {
-        return List.of("Course 1", "Course 2", "Course 3");
+    public List<Course> getCourses() {
+        return List.of(new Course("1", "Course 1", "AD"),
+                new Course("2", "Course 2", "AD"),
+                new Course("3", "Course 3", "AD"));
+    }
+
+    @POST()
+    @Path("/courses")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Course postCourse(Course course) {
+        return new Course("100", course.getTitle(), course.getAuthor());
     }
 }
