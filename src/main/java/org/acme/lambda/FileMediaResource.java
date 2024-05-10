@@ -36,7 +36,7 @@ public class FileMediaResource {
 //    }
 
     @Path("/upload")
-    @POST
+    @PUT
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
 //    @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Produces(MediaType.TEXT_PLAIN)
