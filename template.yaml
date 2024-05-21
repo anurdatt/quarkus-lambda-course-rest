@@ -15,5 +15,26 @@
         Runtime: java17
         CodeUri: target/function.zip
         MemorySize: 2048
-        Policies: AWSLambdaBasicExecutionRole
+        Policies:
+          - AWSLambdaBasicExecutionRole
+          - DynamoDBCrudPolicy:
+              TableName: !Ref CourseDDBTable
+          - DynamoDBCrudPolicy:
+              TableName: !Ref LessonDDBTable
+
         Timeout: 150
+
+    CourseDDBTable:
+      Type: AWS::Serverless::SimpleTable
+      Properties:
+        TableName: Course
+        PrimaryKey:
+          Name: id
+          Type: Number
+    LessonDDBTable:
+      Type: AWS::Serverless::SimpleTable
+      Properties:
+        TableName: Lesson
+        PrimaryKey:
+          Name: id
+          Type: Number
