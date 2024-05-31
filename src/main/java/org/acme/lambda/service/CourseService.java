@@ -3,17 +3,17 @@ package org.acme.lambda.service;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.acme.lambda.model.Course;
+import org.acme.lambda.model.Lesson;
 import org.acme.lambda.util.DDBUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
-import software.amazon.awssdk.enhanced.dynamodb.Key;
-import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.enhanced.dynamodb.model.UpdateItemEnhancedRequest;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
@@ -33,6 +33,19 @@ public class CourseService {
 
     public List<Course> findAll() {
         return courseTable.scan().items().stream().collect(Collectors.toList());
+    }
+
+    public List<Course> findCoursesByCourseUrl(String courseUrl) {
+
+        return courseTable.scan(s -> s
+                        .consistentRead(true)
+                        .filterExpression(Expression.builder()
+                                .expression("courseUrl = :courseUrl")
+                                .expressionValues(Map.of(":courseUrl", AttributeValue.builder()
+                                        .s(courseUrl)
+                                        .build()))
+                                .build()))
+                .items().stream().collect(Collectors.toList());
     }
 
     public Course get(Long id) {

@@ -10,17 +10,22 @@ import org.acme.lambda.model.Course;
 //import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.core.sync.ResponseTransformer;
+import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.S3Object;
+import software.amazon.awssdk.services.s3.model.GetUrlRequest;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.Base64;
 import java.util.List;
 
@@ -34,6 +39,19 @@ public class FileMediaResource {
 //        @FormParam("file")
 //        public InputStream file;
 //    }
+
+
+    private static final Region REGION = Region.US_EAST_1;
+
+    private final S3Presigner presigner;
+
+    public FileMediaResource() {
+        this.presigner = S3Presigner.builder()
+                .region(REGION)
+                .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
+                .build();
+    }
+
 
     @Path("/upload")
     @PUT
@@ -130,4 +148,30 @@ public class FileMediaResource {
             s3.close();
         }
     }
+
+    @Path("/signed-url")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response getSignedUrl(@QueryParam("bucketName") String bucketName,
+                                 @QueryParam("fileName") String fileName) {
+        if (bucketName == null || fileName == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("Bucket name and file name must be provided").build();
+        }
+
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(fileName)
+                .build();
+
+        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(3))
+                .getObjectRequest(getObjectRequest)
+                .build();
+
+        String signedUrl = presigner.presignGetObject(presignRequest).url().toString();
+
+        return Response.ok().entity(signedUrl).build();
+    }
+
 }

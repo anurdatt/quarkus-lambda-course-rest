@@ -15,18 +15,21 @@ public class Course {
     String longDescription;
     String category;
     int lessonsCount;
-    String url;
+    String courseUrl;
     int seqNo;
     int price;
 
     String author;
+
+    String baseUrl;
+
 
     public Course() {
     }
 
     public Course(Long id, String description, String iconUrl, String courseListIcon,
                   String longDescription, String category, int lessonsCount,
-                  String url, int seqNo, int price, String author) {
+                  String courseUrl, int seqNo, int price, String author, String baseUrl) {
         this.id = id;
         this.description = description;
         this.iconUrl = iconUrl;
@@ -34,10 +37,11 @@ public class Course {
         this.longDescription = longDescription;
         this.category = category;
         this.lessonsCount = lessonsCount;
-        this.url = url;
+        this.courseUrl = courseUrl;
         this.seqNo = seqNo;
         this.price = price;
         this.author = author;
+        this.baseUrl = baseUrl;
     }
 
 
@@ -99,12 +103,12 @@ public class Course {
         this.lessonsCount = lessonsCount;
     }
 
-    public String getUrl() {
-        return url;
+    public String getCourseUrl() {
+        return courseUrl;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setCourseUrl(String courseUrl) {
+        this.courseUrl = courseUrl;
     }
 
     public int getSeqNo() {
@@ -129,5 +133,13 @@ public class Course {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 }

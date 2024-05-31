@@ -6,14 +6,13 @@ import org.acme.lambda.model.Lesson;
 import org.acme.lambda.util.DDBUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
-import software.amazon.awssdk.enhanced.dynamodb.Key;
-import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.enhanced.dynamodb.model.UpdateItemEnhancedRequest;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
@@ -34,6 +33,20 @@ public class LessonService {
     public List<Lesson> findAll() {
         return lessonTable.scan().items().stream().collect(Collectors.toList());
     }
+
+
+    public List<Lesson> findByCourseId(Long courseId) {
+        return lessonTable.scan(s -> s
+                        .consistentRead(true)
+                        .filterExpression(Expression.builder()
+                                .expression("courseId = :courseId")
+                                .expressionValues(Map.of(":courseId", AttributeValue.builder()
+                                        .n(String.valueOf(courseId))
+                                        .build()))
+                                .build()))
+                .items().stream().collect(Collectors.toList());
+    }
+
 
     public Lesson get(Long id) {
         Key partitionKey = Key.builder().partitionValue(id).build();

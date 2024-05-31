@@ -13,19 +13,27 @@ public class Lesson {
     String duration;
     int seqNo;
     Long courseId;
+    String iconUrl;
+    String videoUrl;
+    String longDescription;
+    long fileSize;
 
     public Lesson() {
     }
 
-    public Lesson(Long id, String description, String duration, int seqNo, Long courseId) {
+    public Lesson(Long id, String description, String duration, int seqNo,
+                  Long courseId, String iconUrl, String videoUrl, String longDescription,
+                  long fileSize) {
         this.id = id;
         this.description = description;
         this.duration = duration;
         this.seqNo = seqNo;
         this.courseId = courseId;
+        this.iconUrl = iconUrl;
+        this.videoUrl = videoUrl;
+        this.longDescription = longDescription;
+        this.fileSize = fileSize;
     }
-
-
 
     @DynamoDbPartitionKey
 
@@ -67,5 +75,37 @@ public class Lesson {
 
     public void setCourseId(Long courseId) {
         this.courseId = courseId;
+    }
+
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
+    }
+
+    public String getLongDescription() {
+        return longDescription;
+    }
+
+    public void setLongDescription(String longDescription) {
+        this.longDescription = longDescription;
+    }
+
+    public long getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(long fileSize) {
+        this.fileSize = fileSize;
     }
 }
