@@ -17,13 +17,14 @@ public class Lesson {
     String videoUrl;
     String longDescription;
     long fileSize;
+    boolean isPaid;
 
     public Lesson() {
     }
 
     public Lesson(Long id, String description, String duration, int seqNo,
                   Long courseId, String iconUrl, String videoUrl, String longDescription,
-                  long fileSize) {
+                  long fileSize, boolean isPaid) {
         this.id = id;
         this.description = description;
         this.duration = duration;
@@ -33,6 +34,7 @@ public class Lesson {
         this.videoUrl = videoUrl;
         this.longDescription = longDescription;
         this.fileSize = fileSize;
+        this.isPaid = isPaid;
     }
 
     @DynamoDbPartitionKey
@@ -107,5 +109,13 @@ public class Lesson {
 
     public void setFileSize(long fileSize) {
         this.fileSize = fileSize;
+    }
+
+    public boolean isPaid() {
+        return isPaid;
+    }
+
+    public void setPaid(boolean paid) {
+        isPaid = paid;
     }
 }

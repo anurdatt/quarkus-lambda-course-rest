@@ -10,6 +10,7 @@ import org.acme.lambda.model.Course;
 //import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -47,8 +48,8 @@ public class FileMediaResource {
 
     public FileMediaResource() {
         this.presigner = S3Presigner.builder()
-                .region(REGION)
-                .credentialsProvider(EnvironmentVariableCredentialsProvider.create())
+                .region(REGION.US_EAST_1)
+                .credentialsProvider(DefaultCredentialsProvider.create())
                 .build();
     }
 

@@ -21,6 +21,10 @@
               TableName: !Ref CourseDDBTable
           - DynamoDBCrudPolicy:
               TableName: !Ref LessonDDBTable
+          - DynamoDBCrudPolicy:
+              TableName: !Ref CourseTagDDBTable
+          - DynamoDBCrudPolicy:
+              TableName: Tag
 
         Timeout: 150
 
@@ -36,6 +40,14 @@
       Type: AWS::Serverless::SimpleTable
       Properties:
         TableName: Lesson
+        PrimaryKey:
+          Name: id
+          Type: Number
+
+    CourseTagDDBTable:
+      Type: AWS::Serverless::SimpleTable
+      Properties:
+        TableName: CourseTag
         PrimaryKey:
           Name: id
           Type: Number
